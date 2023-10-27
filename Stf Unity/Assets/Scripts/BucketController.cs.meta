@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 497a925d94b235c45849c8e3f9d8aa7b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - waterDropPrefab: {instanceID: 0}
+  - spawnPoint: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
