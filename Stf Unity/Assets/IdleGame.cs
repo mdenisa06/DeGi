@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class IdleGame : MonoBehaviour
 {
     public Text dropNumberText;
-    public double drops;
+    
 
     public Text dropsPerSecondText;
     public Text rainText;
@@ -12,10 +12,12 @@ public class IdleGame : MonoBehaviour
 
     //public double dropsPerSecondRain; // for button Rain
     //public double bucketUpgradeDrop; // for button bucket update
-    
+    public double drops;
     // what changes in the buttons' text
     public double rainPower; // dropsPerSeconds
     public double bucketUpgradePower; 
+    private bool isRainActive = false;
+
 
     //public int upgradeLevel;
     
@@ -23,10 +25,9 @@ public class IdleGame : MonoBehaviour
     void Start()
     {
         drops = 0;
-        //dropsPerSecondRain = 0;
         rainPower = 0;
         bucketUpgradePower = 1;
-
+        InvokeRepeating("IncrementDrops", 1.0f, 1.0f); // Calls IncrementDrops every 1 second.
 
     }
 
@@ -37,7 +38,8 @@ public class IdleGame : MonoBehaviour
         dropsPerSecondText.text = rainPower + "/sec";
         rainText.text = "Rain\n" + rainPower + " / sec";
         bucketUpgradeText.text = "Bucket Upgrade\n" + bucketUpgradePower + " / tap";
-        drops += rainPower * Time.deltaTime;
+        //drops += rainPower * Time.deltaTime;
+        //InvokeRepeating("IncrementDrops", 10.0f, 100.0f); // Calls IncrementDrops every 1 second.
     }
 
     //Buttons
@@ -46,7 +48,14 @@ public class IdleGame : MonoBehaviour
     }
 
     public void RainClicked(){
-        rainPower += 0.2;
+        if (!isRainActive){
+            rainPower += 5;
+            isRainActive = true;
+        }
+    }
+
+    private void IncrementDrops(){
+        drops += rainPower;
     }
 
     public void BucketUpgradeClicked(){
