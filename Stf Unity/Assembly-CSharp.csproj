@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\BucketController.cs" />
     <Compile Include="Assets\IdleGame.cs" />
+    <Compile Include="Assets\SceneLoader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
