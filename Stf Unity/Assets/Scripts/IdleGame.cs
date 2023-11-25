@@ -7,6 +7,9 @@ public class IdleGame : MonoBehaviour
     public Text dropsPerSecondText;
     public Text rainText;
     public Text bucketUpgradeText;
+    public Text levelText;
+    public Text LevelUpRequirement;
+
 
     public double drops;
     // what changes in the buttons' text
@@ -15,15 +18,20 @@ public class IdleGame : MonoBehaviour
     private bool isRainActive = false;
 
 
-    //public int upgradeLevel;
+    public int playerLevel = 1;
+    public int dropsRequiredForLevelUp;
+    private Vector2 initialSwipePos;
     
-    // Start is called before the first frame update
+    public int initialDropsRequired = 85;
+    public int levelIncreaseAmount = 20;
+    
     void Start()
     {
         //PlayerPrefs.DeleteAll();
         InvokeRepeating("IncrementDrops", 1.0f, 1.0f); // Calls IncrementDrops every 1 second.
         InvokeRepeating("Save", 1.0f, 1.0f); // Calls IncrementDrops every 1 second.
         Load();
+        UpdateUI();
     }
 
     public void Load()
@@ -31,6 +39,7 @@ public class IdleGame : MonoBehaviour
         drops = double.Parse(PlayerPrefs.GetString("drops","0"));
         rainPower = double.Parse(PlayerPrefs.GetString("rainPower","0"));
         bucketUpgradePower = double.Parse(PlayerPrefs.GetString("bucketUpgradePower","1"));
+        playerLevel = PlayerPrefs.GetInt("playerLevel", 1);
     }
 
     public void Save()
@@ -38,6 +47,7 @@ public class IdleGame : MonoBehaviour
         PlayerPrefs.SetString("drops", drops.ToString());
         PlayerPrefs.SetString("rainPower", rainPower.ToString());
         PlayerPrefs.SetString("bucketUpgradePower", bucketUpgradePower.ToString());
+        PlayerPrefs.SetInt("playerLevel", playerLevel);
     }
 
     public void ResetPlayerPrefs()
@@ -45,14 +55,54 @@ public class IdleGame : MonoBehaviour
         PlayerPrefs.DeleteAll(); // This clears all PlayerPrefs data.
     }
 
-    // Update is called once per frame
-    void Update()
+    void UpdateUI()
     {
         dropNumberText.text = " " + drops;
         dropsPerSecondText.text = rainPower + "/sec";
         rainText.text = "Rain\n" + rainPower + " / sec";
         bucketUpgradeText.text = "Bucket Upgrade\n" + bucketUpgradePower + " / tap";
+        dropsRequiredForLevelUp = initialDropsRequired + (levelIncreaseAmount * (playerLevel - 1));
+        levelText.text = "Lv " + playerLevel; // Update the level text
+        LevelUpRequirement.text = "FIRE! FILL UNTIL\n" + dropsRequiredForLevelUp;
+
+    }
+
+    void Update()
+    {
+        //dropNumberText.text = " " + drops;
+        //dropsPerSecondText.text = rainPower + "/sec";
+        //rainText.text = "Rain\n" + rainPower + " / sec";
+        //bucketUpgradeText.text = "Bucket Upgrade\n" + bucketUpgradePower + " / tap";
+
+        UpdateUI();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            initialSwipePos = Input.mousePosition;
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            Vector2 swipeDelta = initialSwipePos - (Vector2)Input.mousePosition;
+
+            // Check if the swipe is downwards and has a minimum distance
+            if (swipeDelta.y > 50 && Mathf.Abs(swipeDelta.x) < 50)
+            {
+                TryLevelUp();
+            }
+        }
         
+    }
+
+    void TryLevelUp()
+    {
+        if (drops >= dropsRequiredForLevelUp)
+        {
+            drops -= dropsRequiredForLevelUp;
+            playerLevel++;
+            UpdateUI(); // Update the UI after leveling up
+        }
+        // You can add an else statement here for additional feedback if the player doesn't have enough drops
     }
 
     //Buttons
@@ -65,8 +115,12 @@ public class IdleGame : MonoBehaviour
     {
         if (!isRainActive)
         {
-            rainPower += 5;
-            isRainActive = false;
+            if (playerLevel >= 2)
+            {
+                rainPower += 5;
+                isRainActive = false;
+                if (playerLevel == 2) playerLevel = 3;
+            }
         }
     }
 
@@ -77,7 +131,21 @@ public class IdleGame : MonoBehaviour
 
     public void BucketUpgradeClicked()
     {
-        bucketUpgradePower += 1;
+        if (playerLevel >= 1)
+        {
+            bucketUpgradePower += 1;
+            if (playerLevel == 1) playerLevel = 2;
+        }
+    }
+
+    public void CloudClicked()
+    {
+        if (playerLevel >= 3)
+        {
+            // Implement functionality for the third power-up
+            // You can add specific upgrades or actions here
+            if (playerLevel == 3) playerLevel = 4;
+        }
     }
 
    
