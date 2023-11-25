@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class IdleGame : MonoBehaviour
 {
@@ -7,7 +8,7 @@ public class IdleGame : MonoBehaviour
     public Text dropsPerSecondText;
     public Text rainText;
     public Text bucketUpgradeText;
-    public Text levelText;
+    public TMP_Text levelText;
     public Text LevelUpRequirement;
 
 
