@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class IdleGame : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class IdleGame : MonoBehaviour
     public TMP_Text levelText;
     public Text LevelUpRequirement;
 
+    public string levelUpSceneName = "LevelUpAnimation"; //name of animation scene
 
     public double drops;
     // what changes in the buttons' text
@@ -102,8 +105,25 @@ public class IdleGame : MonoBehaviour
             drops -= dropsRequiredForLevelUp;
             playerLevel++;
             UpdateUI(); // Update the UI after leveling up
+
+            StartCoroutine(LevelUpAnimation());
         }
         // You can add an else statement here for additional feedback if the player doesn't have enough drops
+    }
+
+    IEnumerator LevelUpAnimation()
+    {
+        // Load the level-up scene
+        SceneManager.LoadScene(levelUpSceneName, LoadSceneMode.Additive);
+
+        // Wait for a few seconds (adjust this based on your animation length)
+        yield return new WaitForSeconds(1.55f); // Example: 3 seconds
+
+        // Unload the level-up scene
+        SceneManager.UnloadSceneAsync(levelUpSceneName);
+
+        // Load back the main scene (optional, if you want to return to the main scene)
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     //Buttons

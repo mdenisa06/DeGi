@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Daily Quest.unity
     guid: e35e0af75e304234aaa56acc488e1d61
+  - enabled: 1
+    path: Assets/Scenes/LevelUpAnimation.unity
+    guid: c67dfd992b9c22446b0faacf506aaa6b
   m_configObjects: {}
