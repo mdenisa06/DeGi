@@ -57,6 +57,12 @@ public class IdleGame : MonoBehaviour
     public void ResetPlayerPrefs()
     {
         PlayerPrefs.DeleteAll(); // This clears all PlayerPrefs data.
+        
+        drops = 0;
+        rainPower = 0;
+        bucketUpgradePower = 1;
+        playerLevel = 1;
+        //dropsRequiredForLevelUp = Mathf.RoundToInt(initialDropsRequired * Mathf.Pow(levelGrowthFactor, playerLevel - 1));
     }
 
     void UpdateUI()
