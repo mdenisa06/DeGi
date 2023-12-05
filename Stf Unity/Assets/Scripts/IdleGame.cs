@@ -22,11 +22,15 @@ public class IdleGame : MonoBehaviour
     private bool isRainActive = false;
 
 
+    public int bucketUpgradePowerUpLevel = 0;
+    public int rainPowerUpLevel = 0;
+    public int cloudDropsPowerUpLevel = 0;
+    private int totalPowerUpsUpgradedInLevel = 0;
     public int playerLevel = 1;
     public int dropsRequiredForLevelUp;
     private Vector2 initialSwipePos;
     
-    public int initialDropsRequired = 85;
+    public int initialDropsRequired = 10; // SCHIMBA AICI
     public int levelIncreaseAmount = 20;
     
     void Start()
@@ -43,7 +47,12 @@ public class IdleGame : MonoBehaviour
         drops = double.Parse(PlayerPrefs.GetString("drops","0"));
         rainPower = double.Parse(PlayerPrefs.GetString("rainPower","0"));
         bucketUpgradePower = double.Parse(PlayerPrefs.GetString("bucketUpgradePower","1"));
+        
         playerLevel = PlayerPrefs.GetInt("playerLevel", 1);
+        bucketUpgradePowerUpLevel = PlayerPrefs.GetInt("bucketUpgradePowerUpLevel", 0);
+        rainPowerUpLevel = PlayerPrefs.GetInt("rainPowerUpLevel", 0);
+        cloudDropsPowerUpLevel = PlayerPrefs.GetInt("cloudDropsPowerUpLevel", 0);
+        totalPowerUpsUpgradedInLevel = PlayerPrefs.GetInt("totalPowerUpsUpgradedInLevel", 0);
     }
 
     public void Save()
@@ -51,7 +60,12 @@ public class IdleGame : MonoBehaviour
         PlayerPrefs.SetString("drops", drops.ToString());
         PlayerPrefs.SetString("rainPower", rainPower.ToString());
         PlayerPrefs.SetString("bucketUpgradePower", bucketUpgradePower.ToString());
+        
         PlayerPrefs.SetInt("playerLevel", playerLevel);
+        PlayerPrefs.SetInt("bucketUpgradePowerUpLevel", bucketUpgradePowerUpLevel);
+        PlayerPrefs.SetInt("rainPowerUpLevel", rainPowerUpLevel);
+        PlayerPrefs.SetInt("cloudDropsPowerUpLevel", cloudDropsPowerUpLevel);
+        PlayerPrefs.SetInt("totalPowerUpsUpgradedInLevel", totalPowerUpsUpgradedInLevel);
     }
 
     public void ResetPlayerPrefs()
@@ -61,7 +75,12 @@ public class IdleGame : MonoBehaviour
         drops = 0;
         rainPower = 0;
         bucketUpgradePower = 1;
+
         playerLevel = 1;
+        bucketUpgradePowerUpLevel = 0;
+        rainPowerUpLevel = 0;
+        cloudDropsPowerUpLevel = 0;
+        totalPowerUpsUpgradedInLevel = 0;
         //dropsRequiredForLevelUp = Mathf.RoundToInt(initialDropsRequired * Mathf.Pow(levelGrowthFactor, playerLevel - 1));
     }
 
@@ -71,6 +90,7 @@ public class IdleGame : MonoBehaviour
         dropsPerSecondText.text = rainPower + "/sec";
         rainText.text = "Rain\n" + rainPower + " / sec";
         bucketUpgradeText.text = "Bucket Upgrade\n" + bucketUpgradePower + " / tap";
+
         dropsRequiredForLevelUp = initialDropsRequired + (levelIncreaseAmount * (playerLevel - 1));
         levelText.text = "Lv " + playerLevel; // Update the level text
         LevelUpRequirement.text = "FIRE! FILL UNTIL\n" + dropsRequiredForLevelUp;
@@ -79,10 +99,6 @@ public class IdleGame : MonoBehaviour
 
     void Update()
     {
-        //dropNumberText.text = " " + drops;
-        //dropsPerSecondText.text = rainPower + "/sec";
-        //rainText.text = "Rain\n" + rainPower + " / sec";
-        //bucketUpgradeText.text = "Bucket Upgrade\n" + bucketUpgradePower + " / tap";
 
         UpdateUI();
 
@@ -110,8 +126,8 @@ public class IdleGame : MonoBehaviour
         {
             drops -= dropsRequiredForLevelUp;
             playerLevel++;
-            UpdateUI(); // Update the UI after leveling up
 
+            UpdateUI(); // Update the UI after leveling up
             StartCoroutine(LevelUpAnimation());
         }
         // You can add an else statement here for additional feedback if the player doesn't have enough drops
@@ -138,40 +154,45 @@ public class IdleGame : MonoBehaviour
         drops += bucketUpgradePower;
     }
 
-    public void RainClicked()
-    {
-        if (!isRainActive)
-        {
-            if (playerLevel >= 2)
-            {
-                rainPower += 5;
-                isRainActive = false;
-                if (playerLevel == 2) playerLevel = 3;
-            }
-        }
-    }
-
     private void IncrementDrops()
     {
         drops += rainPower;
     }
 
+
+
     public void BucketUpgradeClicked()
     {
-        if (playerLevel >= 1)
+        if (playerLevel >= 2 && totalPowerUpsUpgradedInLevel < playerLevel - 1)
         {
+            bucketUpgradePowerUpLevel++;
+            totalPowerUpsUpgradedInLevel++;
             bucketUpgradePower += 1;
-            if (playerLevel == 1) playerLevel = 2;
+        }
+    }
+
+    public void RainClicked()
+    {
+        if (playerLevel >= 3 && totalPowerUpsUpgradedInLevel < playerLevel - 1)
+        {
+            if (!isRainActive)
+            {
+                rainPowerUpLevel++;
+                totalPowerUpsUpgradedInLevel++;
+                rainPower += 5;
+                isRainActive = false;
+            }
         }
     }
 
     public void CloudClicked()
     {
-        if (playerLevel >= 3)
+        if (playerLevel >= 4 && totalPowerUpsUpgradedInLevel < playerLevel - 1)
         {
+            cloudDropsPowerUpLevel++;
+            totalPowerUpsUpgradedInLevel++;
             // Implement functionality for the third power-up
             // You can add specific upgrades or actions here
-            if (playerLevel == 3) playerLevel = 4;
         }
     }
 
