@@ -3,15 +3,24 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System;
 
 public class IdleGame : MonoBehaviour
 {
     public Text dropNumberText;
     public Text dropsPerSecondText;
-    public Text rainText;
     public Text bucketUpgradeText;
+    public Text rainText;
+    public Text cloudText;
+    public Text collectText;
     public TMP_Text levelText;
     public Text LevelUpRequirement;
+
+    // Buttons
+    public Button bucketUpgradeButton;
+    public Button rainButton;
+    public Button cloudButton;
+    public Button collectButton;
 
     public string levelUpSceneName = "LevelUpAnimation"; //name of animation scene
 
@@ -19,7 +28,16 @@ public class IdleGame : MonoBehaviour
     // what changes in the buttons' text
     public double rainPower; // dropsPerSeconds
     public double bucketUpgradePower; 
+
+     // Cloud Drops variables
+    private double cloudDrops;
+    private double cloudDropLimit = 100; // Initial limit for drops in the cloud
+    private double cloudDropRate = 1;   // Initial rate at which drops are gathered per second
+    private double timeSinceLastGathering; // Time since the last gathering
+    private double gatheringInterval = 1; // Time interval for gathering in seconds
+
     private bool isRainActive = false;
+
 
 
     public int bucketUpgradePowerUpLevel = 0;
@@ -28,10 +46,9 @@ public class IdleGame : MonoBehaviour
     private int totalPowerUpsUpgradedInLevel = 0;
     public int playerLevel = 1;
     public int dropsRequiredForLevelUp;
-    private Vector2 initialSwipePos;
-    
     public int initialDropsRequired = 15; // CHANGE HERE BACK TO 85 AFTER YOU ARE DONE TESTING
     public int levelIncreaseAmount = 20;
+    private Vector2 initialSwipePos;
     
     void Start()
     {   
@@ -102,11 +119,18 @@ public class IdleGame : MonoBehaviour
 
         dropNumberText.text = " " + drops;
         dropsPerSecondText.text = rainPower + "/sec";
-        rainText.text = "Rain\n" + rainPower + " / sec";
-        bucketUpgradeText.text = "Bucket Upgrade\n" + bucketUpgradePower + " / tap";
+        bucketUpgradeText.text = "Bucket Upgrade\n" + bucketUpgradePower + " / tap" + "\n Level: " + bucketUpgradePowerUpLevel;
+        rainText.text = "Rain\n" + rainPower + " / sec" + "\n Level: " + rainPowerUpLevel;
+        cloudText.text = "Cloud Drops" + "\nLimit: " + cloudDropLimit  + "\nRate: " + cloudDropRate  +"\n Level: " + cloudDropsPowerUpLevel;
+        collectText.text = "Collect:\n" + cloudDrops;
 
         levelText.text = "Lv " + playerLevel; // Update the level text
         LevelUpRequirement.text = "FIRE! FILL UNTIL\n" + dropsRequiredForLevelUp;
+
+        // Check power-up levels and update button interactability
+        //bucketUpgradeButton.interactable = (playerLevel >= 2 && bucketUpgradePowerUpLevel >= 1);
+        //rainButton.interactable = (playerLevel >= 3 && rainPowerUpLevel >= 1);
+        //cloudButton.interactable = (playerLevel >= 4 && cloudDropsPowerUpLevel >= 1);
 
     }
 
@@ -128,6 +152,19 @@ public class IdleGame : MonoBehaviour
             if (swipeDelta.y > 50 && Mathf.Abs(swipeDelta.x) < 50)
             {
                 TryLevelUp();
+            }
+        }
+
+        if (playerLevel >= 4)
+        {
+            // Update the time since the last gathering
+            timeSinceLastGathering += Time.deltaTime;
+
+            // Check if it's time to gather drops
+            if (timeSinceLastGathering >= gatheringInterval)
+            {
+                GatherDrops();
+                timeSinceLastGathering = 0; // Reset the timer
             }
         }
         
@@ -173,7 +210,6 @@ public class IdleGame : MonoBehaviour
     }
 
 
-
     public void BucketUpgradeClicked()
     {
         if (playerLevel >= 2 && totalPowerUpsUpgradedInLevel < playerLevel - 1)
@@ -206,7 +242,33 @@ public class IdleGame : MonoBehaviour
             totalPowerUpsUpgradedInLevel++;
             // Implement functionality for the third power-up
             // You can add specific upgrades or actions here
+            AdjustCloudDropsPowerUp();
         }
+    }
+
+    void GatherDrops()
+    {
+        double gatheredDrops = cloudDropRate * gatheringInterval;
+        cloudDrops = Math.Min(cloudDrops + gatheredDrops, cloudDropLimit);
+    }
+
+    public void CollectFromCloud()
+    {
+        // Collect all drops in the cloud
+        drops += cloudDrops;
+        cloudDrops = 0; // Reset the drops in the cloud after collection
+    }
+
+    void AdjustCloudDropsPowerUp()
+    {
+        // Define base values and growth factors
+        double baseLimit = 100; // Initial limit
+        double baseRate = 1;    // Initial rate
+        double growthFactor = 1.2; // Adjust as needed
+
+        // Use the formula to calculate new values
+        cloudDropLimit = baseLimit * Math.Pow(growthFactor, cloudDropsPowerUpLevel);
+        cloudDropRate = baseRate * Math.Pow(growthFactor, cloudDropsPowerUpLevel);
     }
 
    
