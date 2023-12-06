@@ -31,10 +31,11 @@ public class IdleGame : MonoBehaviour
 
      // Cloud Drops variables
     private double cloudDrops;
-    private double cloudDropLimit = 100; // Initial limit for drops in the cloud
-    private double cloudDropRate = 1;   // Initial rate at which drops are gathered per second
+    private int cloudDropLimit = 100; // Initial limit for drops in the cloud
+    private int cloudDropRate = 1;   // Initial rate at which drops are gathered per second
     private double timeSinceLastGathering; // Time since the last gathering
     private double gatheringInterval = 1; // Time interval for gathering in seconds
+
 
     private bool isRainActive = false;
 
@@ -52,13 +53,16 @@ public class IdleGame : MonoBehaviour
     
     void Start()
     {   
+        //PlayerPrefs.DeleteAll();
+
         initialDropsRequired = 15;    // CHANGE HERE BACK TO 85 AFTER YOU ARE DONE TESTING
         //Debug.Log("global initialDropsRequired: " + initialDropsRequired);
-        //PlayerPrefs.DeleteAll();
+        
         InvokeRepeating("IncrementDrops", 1.0f, 1.0f); // Calls IncrementDrops every 1 second.
         InvokeRepeating("Save", 1.0f, 1.0f); // Calls IncrementDrops every 1 second.
         Load();
         UpdateUI();
+  
     }
 
     public void Load()
@@ -75,6 +79,12 @@ public class IdleGame : MonoBehaviour
 
         initialDropsRequired = PlayerPrefs.GetInt("initialDropsRequired", 15);
             // CHANGE HERE BACK TO 85 AFTER YOU ARE DONE TESTING
+
+        cloudDrops = double.Parse(PlayerPrefs.GetString("cloudDrops", "0"));
+        cloudDropLimit = int.Parse(PlayerPrefs.GetString("cloudDropLimit", "100"));
+        cloudDropRate = int.Parse(PlayerPrefs.GetString("cloudDropRate", "1"));
+        timeSinceLastGathering = double.Parse(PlayerPrefs.GetString("timeSinceLastGathering", "0"));
+
     }
 
     public void Save()
@@ -90,6 +100,12 @@ public class IdleGame : MonoBehaviour
         PlayerPrefs.SetInt("totalPowerUpsUpgradedInLevel", totalPowerUpsUpgradedInLevel);
 
         PlayerPrefs.SetInt("initialDropsRequired", initialDropsRequired);
+
+        PlayerPrefs.SetString("cloudDrops", cloudDrops.ToString());
+        PlayerPrefs.SetString("cloudDropLimit", cloudDropLimit.ToString());
+        PlayerPrefs.SetString("cloudDropRate", cloudDropRate.ToString());
+        PlayerPrefs.SetString("timeSinceLastGathering", timeSinceLastGathering.ToString());
+
     }
 
     public void ResetPlayerPrefs()
@@ -107,7 +123,14 @@ public class IdleGame : MonoBehaviour
         cloudDropsPowerUpLevel = 0;
         totalPowerUpsUpgradedInLevel = 0;
 
-        UpdateUI();  // Update the UI after resetting player preferences
+        cloudDrops = 0;
+        cloudDropLimit = 100;
+        cloudDropRate = 1;
+        timeSinceLastGathering = 0;
+
+        Save();
+        AdjustCloudDropsPowerUp();
+       
         //dropsRequiredForLevelUp = Mathf.RoundToInt(initialDropsRequired * Mathf.Pow(levelIncreaseAmount, playerLevel - 1));
     }
 
@@ -155,7 +178,7 @@ public class IdleGame : MonoBehaviour
             }
         }
 
-        if (playerLevel >= 4)
+        if (playerLevel >= 4 && cloudDropsPowerUpLevel >= 1)
         {
             // Update the time since the last gathering
             timeSinceLastGathering += Time.deltaTime;
@@ -262,13 +285,13 @@ public class IdleGame : MonoBehaviour
     void AdjustCloudDropsPowerUp()
     {
         // Define base values and growth factors
-        double baseLimit = 100; // Initial limit
-        double baseRate = 1;    // Initial rate
-        double growthFactor = 1.2; // Adjust as needed
+        int baseLimit = 100; // Initial limit
+        int baseRate = 1;    // Initial rate
+        double growthFactor = 1.7; // Adjust as needed
 
         // Use the formula to calculate new values
-        cloudDropLimit = baseLimit * Math.Pow(growthFactor, cloudDropsPowerUpLevel);
-        cloudDropRate = baseRate * Math.Pow(growthFactor, cloudDropsPowerUpLevel);
+        cloudDropLimit = (int)(baseLimit * Math.Pow(growthFactor, cloudDropsPowerUpLevel));
+        cloudDropRate = (int)(baseRate * Math.Pow(growthFactor, cloudDropsPowerUpLevel));
     }
 
    
