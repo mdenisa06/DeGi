@@ -7,6 +7,7 @@ using System;
 
 public class IdleGame : MonoBehaviour
 {
+    //Text
     public Text dropNumberText;
     public Text dropsPerSecondText;
     public Text bucketUpgradeText;
@@ -22,25 +23,21 @@ public class IdleGame : MonoBehaviour
     public Button cloudButton;
     public Button collectButton;
 
-    public string levelUpSceneName = "LevelUpAnimation"; //name of animation scene
-
     public double drops;
-    // what changes in the buttons' text
-    public double rainPower; // dropsPerSeconds
-    public double bucketUpgradePower; 
 
-     // Cloud Drops variables
+    // Power-Ups
+    public double rainPower; // dropsPerSeconds
+    private bool isRainActive = false;
+    public double bucketUpgradePower; 
+    // Cloud Drops variables
     private double cloudDrops;
-    private int cloudDropLimit = 100; // Initial limit for drops in the cloud
-    private int cloudDropRate = 1;   // Initial rate at which drops are gathered per second
+    private int cloudDropLimit = 100; // Initial limit for drops in the cloud // I changed it from int to double
+    private int cloudDropRate = 1;   // Initial rate at which drops are gathered per second // I changed it from int to double
     private double timeSinceLastGathering; // Time since the last gathering
     private double gatheringInterval = 1; // Time interval for gathering in seconds
+    private double lastOnlineTimestamp;
 
-
-    private bool isRainActive = false;
-
-
-
+    // Levels
     public int bucketUpgradePowerUpLevel = 0;
     public int rainPowerUpLevel = 0;
     public int cloudDropsPowerUpLevel = 0;
@@ -49,15 +46,18 @@ public class IdleGame : MonoBehaviour
     public int dropsRequiredForLevelUp;
     public int initialDropsRequired = 15; // CHANGE HERE BACK TO 85 AFTER YOU ARE DONE TESTING
     public int levelIncreaseAmount = 20;
+    // Other
+    public string levelUpSceneName = "LevelUpAnimation"; //name of animation scene
     private Vector2 initialSwipePos;
-    
+
+   
+
     void Start()
     {   
         //PlayerPrefs.DeleteAll();
 
         initialDropsRequired = 15;    // CHANGE HERE BACK TO 85 AFTER YOU ARE DONE TESTING
         //Debug.Log("global initialDropsRequired: " + initialDropsRequired);
-        
         InvokeRepeating("IncrementDrops", 1.0f, 1.0f); // Calls IncrementDrops every 1 second.
         InvokeRepeating("Save", 1.0f, 1.0f); // Calls IncrementDrops every 1 second.
         Load();
@@ -84,6 +84,8 @@ public class IdleGame : MonoBehaviour
         cloudDropLimit = int.Parse(PlayerPrefs.GetString("cloudDropLimit", "100"));
         cloudDropRate = int.Parse(PlayerPrefs.GetString("cloudDropRate", "1"));
         timeSinceLastGathering = double.Parse(PlayerPrefs.GetString("timeSinceLastGathering", "0"));
+        
+        //lastOnlineTimestamp = double.Parse(PlayerPrefs.GetString("lastOnlineTimestamp", "0"));  //load the last online timestamp
 
     }
 
@@ -106,6 +108,9 @@ public class IdleGame : MonoBehaviour
         PlayerPrefs.SetString("cloudDropRate", cloudDropRate.ToString());
         PlayerPrefs.SetString("timeSinceLastGathering", timeSinceLastGathering.ToString());
 
+            // save the current timestamp
+        //lastOnlineTimestamp = GetTimestamp();
+        //PlayerPrefs.SetString("lastOnlineTimestamp", lastOnlineTimestamp.ToString());
     }
 
     public void ResetPlayerPrefs()
@@ -131,7 +136,6 @@ public class IdleGame : MonoBehaviour
         Save();
         AdjustCloudDropsPowerUp();
        
-        //dropsRequiredForLevelUp = Mathf.RoundToInt(initialDropsRequired * Mathf.Pow(levelIncreaseAmount, playerLevel - 1));
     }
 
     void UpdateUI()
@@ -157,8 +161,11 @@ public class IdleGame : MonoBehaviour
 
     }
 
+
     void Update()
     {
+        // Calculate offline progress
+        //CalculateOfflineProgress();
 
         UpdateUI();
 
@@ -177,7 +184,18 @@ public class IdleGame : MonoBehaviour
                 TryLevelUp();
             }
         }
-
+/*
+        if (playerLevel >= 4 && cloudDropsPowerUpLevel >= 1)
+        {
+            //Debug.Log("Gathering drops...");
+            GatherDrops();
+            timeSinceLastGathering = 0; // Reset the timer
+        }
+        else
+        {
+            Debug.Log("Not gathering drops. Player Level: " + playerLevel + ", Cloud Power-Up Level: " + cloudDropsPowerUpLevel);
+        }
+*/
         if (playerLevel >= 4 && cloudDropsPowerUpLevel >= 1)
         {
             // Update the time since the last gathering
@@ -190,9 +208,13 @@ public class IdleGame : MonoBehaviour
                 timeSinceLastGathering = 0; // Reset the timer
             }
         }
-        
     }
-
+/*
+    void ResetGatheringTimer()
+    {
+        timeSinceLastGathering = 0;
+    }
+*/
     void TryLevelUp()
     {
         if (drops >= dropsRequiredForLevelUp)
@@ -221,7 +243,7 @@ public class IdleGame : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    //Buttons
+    // For the 2 easy power-up buttons
     public void Clicked()
     {
         drops += bucketUpgradePower;
@@ -232,7 +254,7 @@ public class IdleGame : MonoBehaviour
         drops += rainPower;
     }
 
-
+    // Power-up buttons
     public void BucketUpgradeClicked()
     {
         if (playerLevel >= 2 && totalPowerUpsUpgradedInLevel < playerLevel - 1)
@@ -263,36 +285,73 @@ public class IdleGame : MonoBehaviour
         {
             cloudDropsPowerUpLevel++;
             totalPowerUpsUpgradedInLevel++;
-            // Implement functionality for the third power-up
-            // You can add specific upgrades or actions here
+            
             AdjustCloudDropsPowerUp();
         }
     }
 
-    void GatherDrops()
-    {
-        double gatheredDrops = cloudDropRate * gatheringInterval;
-        cloudDrops = Math.Min(cloudDrops + gatheredDrops, cloudDropLimit);
-    }
-
+    
+    // For Cloud Drop functionality
     public void CollectFromCloud()
     {
         // Collect all drops in the cloud
         drops += cloudDrops;
         cloudDrops = 0; // Reset the drops in the cloud after collection
+
+        
+    }
+
+    void GatherDrops()
+    {
+        //Debug.Log("Gathering drops. Power-up level: " + cloudDropsPowerUpLevel);
+        if (cloudDropsPowerUpLevel >= 1)
+        {
+            double gatheredDrops = cloudDropRate * gatheringInterval;
+            cloudDrops = Math.Min(cloudDrops + gatheredDrops, cloudDropLimit);
+            //cloudDrops = Math.Floor(cloudDrops);
+        }
+
+        
     }
 
     void AdjustCloudDropsPowerUp()
     {
         // Define base values and growth factors
-        int baseLimit = 100; // Initial limit
-        int baseRate = 1;    // Initial rate
-        double growthFactor = 1.7; // Adjust as needed
+        double baseLimit = 100; // Initial limit   // I changed it from int to double
+        double baseRate = 1;    // Initial rate    // I changed it from int to double
+        double growthFactor = 1.5; // Adjust as needed
 
         // Use the formula to calculate new values
         cloudDropLimit = (int)(baseLimit * Math.Pow(growthFactor, cloudDropsPowerUpLevel));
         cloudDropRate = (int)(baseRate * Math.Pow(growthFactor, cloudDropsPowerUpLevel));
+
+        //cloudDropLimit = baseLimit * Math.Pow(growthFactor, cloudDropsPowerUpLevel);
+        //cloudDropRate = baseRate * Math.Pow(growthFactor, cloudDropsPowerUpLevel);
     }
 
-   
+    
+/*
+    // For offline Gathering
+    void CalculateOfflineProgress()
+    {
+        if (lastOnlineTimestamp > 0 && playerLevel >= 4)
+        {
+            double offlineTime = GetTimestamp() - lastOnlineTimestamp;
+            double offlineGatheredDrops = Math.Round(cloudDropRate * offlineTime);
+
+
+            cloudDrops = Math.Min(cloudDrops + offlineGatheredDrops, cloudDropLimit);
+            timeSinceLastGathering = 0; // Reset the timer
+
+            // Update the last online timestamp after calculating offline progress
+            lastOnlineTimestamp = GetTimestamp();
+            PlayerPrefs.SetString("lastOnlineTimestamp", lastOnlineTimestamp.ToString());
+        }
+    }
+
+    double GetTimestamp()
+    {
+        return (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+    }
+   */
 }
