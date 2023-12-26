@@ -28,6 +28,7 @@ public class IdleGame : MonoBehaviour
     // Power-Ups
     public double rainPower; // dropsPerSeconds
     private bool isRainActive = false;
+    private bool hasCalculatedOfflineProgress = false; // for collecting drops offline
     public double bucketUpgradePower; 
     // Cloud Drops variables
     private double cloudDrops;
@@ -62,7 +63,9 @@ public class IdleGame : MonoBehaviour
         InvokeRepeating("Save", 1.0f, 1.0f); // Calls IncrementDrops every 1 second.
         Load();
         UpdateUI();
-  
+
+        //for collecting drops offline
+        CalculateOfflineProgress(); // Calculate any offline progress
     }
 
     public void Load()
@@ -86,6 +89,9 @@ public class IdleGame : MonoBehaviour
         timeSinceLastGathering = double.Parse(PlayerPrefs.GetString("timeSinceLastGathering", "0"));
         
         //lastOnlineTimestamp = double.Parse(PlayerPrefs.GetString("lastOnlineTimestamp", "0"));  //load the last online timestamp
+        //for collecting drops offline
+        lastOnlineTimestamp = double.Parse(PlayerPrefs.GetString("lastOnlineTimestamp", GetTimestamp().ToString()));
+        CalculateOfflineProgress();
 
     }
 
@@ -112,6 +118,60 @@ public class IdleGame : MonoBehaviour
         //lastOnlineTimestamp = GetTimestamp();
         //PlayerPrefs.SetString("lastOnlineTimestamp", lastOnlineTimestamp.ToString());
     }
+//for collecting drops offline
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if(pauseStatus) // Game is being paused
+        {
+            SaveLastOnlineTimestamp();
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        SaveLastOnlineTimestamp();
+    }
+
+    void SaveLastOnlineTimestamp()
+    {
+        double timestamp = GetTimestamp();
+        //Debug.Log("Saving last online timestamp: " + timestamp);
+        PlayerPrefs.SetString("lastOnlineTimestamp", timestamp.ToString());
+        PlayerPrefs.Save();
+    }
+
+    void CalculateOfflineProgress()
+    {
+        if (!hasCalculatedOfflineProgress && lastOnlineTimestamp > 0 && playerLevel >= 4 && cloudDropsPowerUpLevel >= 1)
+        {
+            double currentTime = GetTimestamp();
+            //Debug.Log("Current time: " + currentTime);
+            
+            double offlineDuration = currentTime - lastOnlineTimestamp;
+            //Debug.Log("Offline duration (in seconds): " + offlineDuration);
+            
+            double offlineGatheredDrops = cloudDropRate * offlineDuration; 
+            //Debug.Log("Expected offline gathered drops: " + offlineGatheredDrops);
+
+            double availableSpace = cloudDropLimit - cloudDrops;
+            double dropsToAdd = Math.Min(offlineGatheredDrops, availableSpace);
+            
+            //Debug.Log("Drops to add (after considering available space): " + dropsToAdd);
+
+            cloudDrops += dropsToAdd; 
+
+            SaveLastOnlineTimestamp(); // Update the last online timestamp to the current time
+            hasCalculatedOfflineProgress = true; // Set the flag so this doesn't run again
+        }
+    }
+
+
+
+    double GetTimestamp()
+    {
+        return (DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+    }
+
 
     public void ResetPlayerPrefs()
     {
@@ -149,7 +209,9 @@ public class IdleGame : MonoBehaviour
         bucketUpgradeText.text = "Bucket Upgrade\n" + bucketUpgradePower + " / tap" + "\n Level: " + bucketUpgradePowerUpLevel;
         rainText.text = "Rain\n" + rainPower + " / sec" + "\n Level: " + rainPowerUpLevel;
         cloudText.text = "Cloud Drops" + "\nLimit: " + cloudDropLimit  + "\nRate: " + cloudDropRate  +"\n Level: " + cloudDropsPowerUpLevel;
-        collectText.text = "Collect:\n" + cloudDrops;
+        //collectText.text = "Collect:\n" + cloudDrops;
+        collectText.text = "Collect:\n" + Math.Floor(cloudDrops).ToString();
+
 
         levelText.text = "Lv " + playerLevel; // Update the level text
         LevelUpRequirement.text = "FIRE! FILL UNTIL\n" + dropsRequiredForLevelUp;
