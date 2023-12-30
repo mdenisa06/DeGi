@@ -155,11 +155,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1959968119}
-  m_Father: {fileID: 1856994838}
+  m_Father: {fileID: 1418819359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 601, y: 362.99976}
+  m_AnchoredPosition: {x: 600.9941, y: 362.94983}
   m_SizeDelta: {x: 507.19995, y: 404.2998}
   m_Pivot: {x: 0.49999997, y: 0.49999997}
 --- !u!114 &62770652
@@ -206,8 +206,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2021351435}
-        m_TargetAssemblyTypeName: IdleGame, Assembly-CSharp
+      - m_Target: {fileID: 2021351437}
+        m_TargetAssemblyTypeName: MainButtons, Assembly-CSharp
         m_MethodName: CloudClicked
         m_Mode: 1
         m_Arguments:
@@ -825,11 +825,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 115356634}
-  m_Father: {fileID: 1856994838}
+  m_Father: {fileID: 1418819359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 363}
+  m_AnchoredPosition: {x: -0.005859375, y: 362.95007}
   m_SizeDelta: {x: 508.3999, y: 551.3999}
   m_Pivot: {x: 0.5, y: 0.5000001}
 --- !u!114 &555497174
@@ -876,8 +876,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2021351435}
-        m_TargetAssemblyTypeName: IdleGame, Assembly-CSharp
+      - m_Target: {fileID: 2021351437}
+        m_TargetAssemblyTypeName: MainButtons, Assembly-CSharp
         m_MethodName: BucketUpgradeClicked
         m_Mode: 1
         m_Arguments:
@@ -1197,8 +1197,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2021351435}
-        m_TargetAssemblyTypeName: IdleGame, Assembly-CSharp
+      - m_Target: {fileID: 2021351437}
+        m_TargetAssemblyTypeName: MainButtons, Assembly-CSharp
         m_MethodName: CollectFromCloud
         m_Mode: 1
         m_Arguments:
@@ -1352,7 +1352,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 823510399}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
-        m_MethodName: LoadNextScene
+        m_MethodName: LoadQuestScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1476,11 +1476,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1204846912}
-  m_Father: {fileID: 1856994838}
+  m_Father: {fileID: 1418819359}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -516.91016, y: 363.00024}
+  m_AnchoredPosition: {x: -516.9161, y: 362.95032}
   m_SizeDelta: {x: 497.8999, y: 477.83008}
   m_Pivot: {x: 0.5000002, y: 0.5}
 --- !u!114 &860886714
@@ -1527,8 +1527,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2021351435}
-        m_TargetAssemblyTypeName: IdleGame, Assembly-CSharp
+      - m_Target: {fileID: 2021351437}
+        m_TargetAssemblyTypeName: MainButtons, Assembly-CSharp
         m_MethodName: RainClicked
         m_Mode: 1
         m_Arguments:
@@ -1770,7 +1770,10 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 555497173}
+  - {fileID: 860886713}
+  - {fileID: 62770651}
   m_Father: {fileID: 1856994838}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1996,7 +1999,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 21, y: -70}
+  m_AnchoredPosition: {x: 21.000002, y: -70}
   m_SizeDelta: {x: 754.19995, y: 786.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1775127910
@@ -2043,8 +2046,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2021351435}
-        m_TargetAssemblyTypeName: IdleGame, Assembly-CSharp
+      - m_Target: {fileID: 2021351437}
+        m_TargetAssemblyTypeName: MainButtons, Assembly-CSharp
         m_MethodName: Clicked
         m_Mode: 1
         m_Arguments:
@@ -2188,18 +2191,15 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 594641234}
-  - {fileID: 1418819359}
-  - {fileID: 1775127909}
-  - {fileID: 555497173}
-  - {fileID: 860886713}
-  - {fileID: 62770651}
-  - {fileID: 704597676}
-  - {fileID: 577767379}
-  - {fileID: 1635702361}
-  - {fileID: 109521493}
   - {fileID: 727053106}
-  - {fileID: 408779569}
+  - {fileID: 109521493}
+  - {fileID: 577767379}
   - {fileID: 324216000}
+  - {fileID: 1635702361}
+  - {fileID: 1775127909}
+  - {fileID: 408779569}
+  - {fileID: 1418819359}
+  - {fileID: 704597676}
   - {fileID: 2021351434}
   - {fileID: 823510400}
   m_Father: {fileID: 0}
@@ -2651,8 +2651,10 @@ GameObject:
   m_Component:
   - component: {fileID: 2021351434}
   - component: {fileID: 2021351435}
+  - component: {fileID: 2021351437}
+  - component: {fileID: 2021351436}
   m_Layer: 5
-  m_Name: GameManager
+  m_Name: Script runner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2689,6 +2691,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32693f367c523ac49aae02e22d964bea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drops: 0
+  rainPower: 0
+  bucketUpgradePower: 0
+  cloudDrops: 0
+  cloudDropLimit: 100
+  cloudDropRate: 1
+  bucketUpgradePowerUpLevel: 0
+  rainPowerUpLevel: 0
+  cloudDropsPowerUpLevel: 0
+  totalPowerUpsUpgradedInLevel: 0
+  playerLevel: 1
+  initialDropsRequired: 15
+  levelIncreaseAmount: 20
+  dropsRequiredForLevelUp: 0
+  isRainActive: 0
+  playerLevelAtWhichBucketUnlocks: 2
+  playerLevelAtWhichRainUnlocks: 3
+  playerLevelAtWhichCloudUnlocks: 4
+  bucketUnlocked: 0
+  rainUnlocked: 0
+  cloudUnlocked: 0
+--- !u!114 &2021351436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021351433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eb39379f10fcc143844fbcbe0cc3477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   dropNumberText: {fileID: 1126007307}
   dropsPerSecondText: {fileID: 408779570}
   bucketUpgradeText: {fileID: 115356632}
@@ -2697,21 +2732,24 @@ MonoBehaviour:
   collectText: {fileID: 1899537039}
   levelText: {fileID: 1938194046}
   LevelUpRequirement: {fileID: 324216001}
+  main: {fileID: 2021351435}
+--- !u!114 &2021351437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021351433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 479ecae2e84011e4b80aa86760c59c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   bucketUpgradeButton: {fileID: 555497174}
   rainButton: {fileID: 860886714}
   cloudButton: {fileID: 62770652}
   collectButton: {fileID: 704597673}
-  drops: 0
-  rainPower: 0
-  bucketUpgradePower: 0
-  bucketUpgradePowerUpLevel: 0
-  rainPowerUpLevel: 0
-  cloudDropsPowerUpLevel: 0
-  playerLevel: 1
-  dropsRequiredForLevelUp: 0
-  initialDropsRequired: 15
-  levelIncreaseAmount: 20
-  levelUpSceneName: LevelUpAnimation
+  main: {fileID: 2021351435}
 --- !u!1 &2089083656
 GameObject:
   m_ObjectHideFlags: 0

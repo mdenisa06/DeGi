@@ -5,15 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    int currentSceneIndex;
-    public void LoadNextScene()
+    //int currentSceneIndex;
+    public void LoadQuestScene()
     {
-        currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentSceneIndex + 1);
+        //currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene("Daily Quest");
     }
 
-    public void LoadPreviousScene()
+    public void LoadMainScene()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Main");
     }
 }
