@@ -174,7 +174,7 @@ public class Main : MonoBehaviour
         else cloudText.text = "Cloud Drops\n" + "Level: " + cloudDropsPowerUpLevel;
 
         //collectText.text = "Collect:\n" + cloudDrops;
-        collectText.text = "Collect:\n" + Math.Floor(cloudDrops).ToString();
+        collectText.text = "Collect from Cloud:\n" + Math.Floor(cloudDrops).ToString();
         levelText.text = "Lv " + playerLevel; // Update the level text
         LevelUpRequirement.text = "FIRE! FILL UNTIL\n" + dropsRequiredForLevelUp;
 
