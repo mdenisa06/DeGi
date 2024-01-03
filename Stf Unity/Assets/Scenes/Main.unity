@@ -5492,7 +5492,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 223.02701, y: 0}
+  m_AnchoredPosition: {x: 223.02698, y: 0}
   m_SizeDelta: {x: -458, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1660157914
@@ -7409,12 +7409,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   treesNumberText: {fileID: 658856398}
-  Quest1Text: {fileID: 1660157914}
-  Quest2Text: {fileID: 1708462714}
-  Quest3Text: {fileID: 366107135}
-  progressQuest1Text: {fileID: 1691711540}
-  progressQuest2Text: {fileID: 831865426}
-  progressQuest3Text: {fileID: 1863922374}
+  questTexts:
+  - {fileID: 1660157914}
+  - {fileID: 1708462714}
+  - {fileID: 366107135}
+  progressTexts:
+  - {fileID: 1691711540}
+  - {fileID: 831865426}
+  - {fileID: 1863922374}
   treesFromQuests: 0
 --- !u!1 &2089083656
 GameObject:

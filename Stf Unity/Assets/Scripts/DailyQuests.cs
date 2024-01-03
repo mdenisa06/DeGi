@@ -2,17 +2,23 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using System.Collections.Generic;
 
 public class DailyQuests : MonoBehaviour
 {
     // UI
-    public TMP_Text treesNumberText;
+    
+    public TMP_Text treesNumberText;/*
     public TMP_Text Quest1Text;
     public TMP_Text Quest2Text;
     public TMP_Text Quest3Text;
     public Text progressQuest1Text;
     public Text progressQuest2Text;
     public Text progressQuest3Text;
+    */
+    public TMP_Text[] questTexts; // Assign these in the Unity editor to your Quest1Text, Quest2Text, Quest3Text
+    public Text[] progressTexts; // Assign these in the Unity editor to your ProgressQuest1Text, ProgressQuest2Text, ProgressQuest3Text
+    private List<Quest> activeQuests;
 
     private DateTime lastQuestCompletionTime;
     private Quest currentQuest;
@@ -32,9 +38,14 @@ public class DailyQuests : MonoBehaviour
     private int tapFastCount = 0;
     private float tapFastTimer = 0f;
     private bool isTapFastQuestActive = false;
+
+    // Quests 4 5 and 6:
+    private Quest bucketPowerUpUpgradeQuest; // Quest 4: Unlock/Upgrade your bucket to the next level.
+    private Quest rainPowerUpUpgradeQuest; // Quest 5: Unlock/Upgrade your rain to the next level.
+    private Quest cloudPowerUpUpgradeQuest;  // Quest 6: Unlock/Upgrade your cloud to the next level.
     void Start()
     {
-        ActivateTapFastQuest();
+        
         putOutFireQuest = new Quest
         {
             Description = "Put Out Fire x3",
@@ -53,7 +64,24 @@ public class DailyQuests : MonoBehaviour
             IsCompleted = false,
             Reward = 1 // Tree
         };
-        
+        bucketPowerUpUpgradeQuest = new Quest
+        {
+            Description = "Unlock/Upgrade your bucket to the next level",
+            IsCompleted = false,
+            Reward = 2 // Trees
+        };
+        rainPowerUpUpgradeQuest = new Quest
+        {
+            Description = "Unlock/Upgrade your rain to the next level",
+            IsCompleted = false,
+            Reward = 2 // Trees
+        };
+        cloudPowerUpUpgradeQuest = new Quest
+        {
+            Description = "Unlock/Upgrade your cloud to the next level",
+            IsCompleted = false,
+            Reward = 2 // Trees
+        };
         //LoadQuestState(); // Load saved quest state
         //InitializeQuest(); // Initialize the current quest
     }
@@ -70,10 +98,11 @@ public class DailyQuests : MonoBehaviour
             InitializeNextQuest();
         }
         */
+        ActivateTapFastQuest();
         if (isTapFastQuestActive)
         {
             tapFastTimer += Time.deltaTime;
-            if (tapFastTimer > 5f)
+            if (tapFastTimer > 5.0f)
             {
                 // The quest failed to be completed within the time limit
                 // Resetting the quest variables
@@ -84,16 +113,17 @@ public class DailyQuests : MonoBehaviour
         }
     }
 
+    void UpdateQuestUI(){
+        treesNumberText.text = treesFromQuests.ToString() + " Trees";
+    }
+
     public void OnPlayerLeveledUp() // First quest: Put out fire x3
     {
         if (!putOutFireQuest.IsCompleted)
         {
             levelUpCount++;
             if (levelUpCount >= 3)
-            {
-                //putOutFireQuest.IsCompleted = true;
-                //treesFromQuests = putOutFireQuest.Reward; // Award the reward
-                
+            {   
                 CompleteQuest(putOutFireQuest); // isComplete = false;
                 levelUpCount = 0; // Reset the counter for the "Put Out x3 Fires" quest
                 Debug.Log("Trees earned from first quest: " + treesFromQuests);
@@ -138,6 +168,33 @@ public class DailyQuests : MonoBehaviour
     public void ActivateTapFastQuest()
     {
         isTapFastQuestActive = true;
+    }
+
+    public void OnBucketUpgraded() // Quest 4: Unlock/Upgrade your bucket to the next level.
+    {
+        if (!bucketPowerUpUpgradeQuest.IsCompleted)
+        {
+            CompleteQuest(bucketPowerUpUpgradeQuest);
+            Debug.Log("Trees earned from 4th quest: " + treesFromQuests);
+        }
+    }
+
+    public void OnRainUpgraded() // Quest 5: Unlock/Upgrade your rain to the next level.
+    {
+        if (!rainPowerUpUpgradeQuest.IsCompleted)
+        {
+            CompleteQuest(rainPowerUpUpgradeQuest);
+            Debug.Log("Trees earned from 5th quest: " + treesFromQuests);
+        }
+    }
+
+    public void OnCloudUpgraded() // Quest 6: Unlock/Upgrade your cloud to the next level.
+    {
+        if (!cloudPowerUpUpgradeQuest.IsCompleted)
+        {
+            CompleteQuest(cloudPowerUpUpgradeQuest);
+            Debug.Log("Trees earned from 6th quest: " + treesFromQuests);
+        }
     }
 
     public void CompleteQuest(Quest quest)

@@ -371,6 +371,7 @@ public class GameManager : MonoBehaviour
     {
         drops += bucketUpgradePower;
         dailyQuests.OnPlayerTapped(); // Second quest: Tap 50 times.
+        dailyQuests.OnPlayerTappedFast(); // Third quest: 
     }
 
     // For rain mechanism
@@ -387,6 +388,8 @@ public class GameManager : MonoBehaviour
             bucketUpgradePowerUpLevel++;
             totalPowerUpsUpgradedInLevel++;
             bucketUpgradePower += 1;
+
+            dailyQuests.OnBucketUpgraded(); // Quest 4: Unlock/Upgrade your bucket to the next level.
         }
     }
 
@@ -400,6 +403,8 @@ public class GameManager : MonoBehaviour
                 totalPowerUpsUpgradedInLevel++;
                 rainPower += 5;
                 isRainActive = false;
+
+                dailyQuests.OnRainUpgraded(); // Quest 5: Unlock/Upgrade your rain to the next level.
             }
         }
     }
@@ -412,6 +417,7 @@ public class GameManager : MonoBehaviour
             totalPowerUpsUpgradedInLevel++;
             
             AdjustCloudDropsPowerUp();
+            dailyQuests.OnCloudUpgraded(); // Quest 6: Unlock/Upgrade your cloud to the next level.
         }
     }
 
