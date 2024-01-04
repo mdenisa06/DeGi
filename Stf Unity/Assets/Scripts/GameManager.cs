@@ -279,7 +279,7 @@ public class GameManager : MonoBehaviour
             playerLevel++;
 
             UpdateUI(); // Update the UI after leveling up
-            dailyQuests.OnPlayerLeveledUp(); // First quest: Put out fire x3
+            //dailyQuests.OnPlayerLeveledUp(); // First quest: Put out fire x3
             StartCoroutine(LevelUpAnimation());
         }
         // You can add an else statement here for additional feedback if the player doesn't have enough drops
@@ -370,8 +370,8 @@ public class GameManager : MonoBehaviour
     public void Clicked()
     {
         drops += bucketUpgradePower;
-        dailyQuests.OnPlayerTapped(); // Second quest: Tap 50 times.
-        dailyQuests.OnPlayerTappedFast(); // Third quest: 
+        //dailyQuests.OnPlayerTapped(); // Second quest: Tap 50 times.
+        //dailyQuests.OnPlayerTappedFast(); // Third quest: 
     }
 
     // For rain mechanism
@@ -389,7 +389,7 @@ public class GameManager : MonoBehaviour
             totalPowerUpsUpgradedInLevel++;
             bucketUpgradePower += 1;
 
-            dailyQuests.OnBucketUpgraded(); // Quest 4: Unlock/Upgrade your bucket to the next level.
+            //dailyQuests.OnBucketUpgraded(); // Quest 4: Unlock/Upgrade your bucket to the next level.
         }
     }
 
@@ -404,7 +404,7 @@ public class GameManager : MonoBehaviour
                 rainPower += 5;
                 isRainActive = false;
 
-                dailyQuests.OnRainUpgraded(); // Quest 5: Unlock/Upgrade your rain to the next level.
+                //dailyQuests.OnRainUpgraded(); // Quest 5: Unlock/Upgrade your rain to the next level.
             }
         }
     }
@@ -417,7 +417,7 @@ public class GameManager : MonoBehaviour
             totalPowerUpsUpgradedInLevel++;
             
             AdjustCloudDropsPowerUp();
-            dailyQuests.OnCloudUpgraded(); // Quest 6: Unlock/Upgrade your cloud to the next level.
+            //dailyQuests.OnCloudUpgraded(); // Quest 6: Unlock/Upgrade your cloud to the next level.
         }
     }
 

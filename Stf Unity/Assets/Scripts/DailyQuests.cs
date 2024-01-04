@@ -108,9 +108,9 @@ public class DailyQuests : MonoBehaviour
             {"Put Out Fire x3", new Quest{ Description = "Put Out Fire x3", Reward = 4 }},
             {"Tap 50 times", new Quest{ Description = "Tap 50 times", Reward = 1 }},
             {"Tap 15 times in 5 seconds", new Quest{ Description = "Tap 15 times in 5 seconds", Reward = 1 }},
-            {"Unlock/Upgrade your bucket to the next level", new Quest{ Description = "Unlock/Upgrade your bucket to the next level", Reward = 2}},
-            {"Unlock/Upgrade your rain to the next level", new Quest{ Description = "Unlock/Upgrade your rain to the next level", Reward = 2}},
-            {"Unlock/Upgrade your cloud to the next level", new Quest{ Description = "Unlock/Upgrade your cloud to the next level", Reward = 2}}
+            //{"Unlock/Upgrade your bucket to the next level", new Quest{ Description = "Unlock/Upgrade your bucket to the next level", Reward = 2}},
+            //{"Unlock/Upgrade your rain to the next level", new Quest{ Description = "Unlock/Upgrade your rain to the next level", Reward = 2}},
+            //{"Unlock/Upgrade your cloud to the next level", new Quest{ Description = "Unlock/Upgrade your cloud to the next level", Reward = 2}}
             
             // Add other quests here
         };
@@ -127,6 +127,8 @@ public class DailyQuests : MonoBehaviour
             UpdateQuestActivationFlags();
         }
     }
+
+    
 
     string GetProgressForQuest(Quest quest)
     {
@@ -206,13 +208,13 @@ public class DailyQuests : MonoBehaviour
 
     public void OnPlayerLeveledUp() // First quest: Put out fire x3
     {
-        Quest questToCheck = activeQuests.Find(quest => quest.Description == "Put Out Fire x3");
-        if (!questToCheck.IsCompleted && isPutOutFireQuestActive)
+        var putOutFireQuest = activeQuests.Find(quest => quest.Description == "Put Out Fire x3");
+        if (putOutFireQuest != null && !putOutFireQuest.IsCompleted && isPutOutFireQuestActive)
         {
             levelUpCount++;
             if (levelUpCount >= 3)
             {   
-                CompleteQuest(questToCheck); // isComplete = false;
+                CompleteQuest(putOutFireQuest); // isComplete = false;
                 levelUpCount = 0; // Reset the counter for the "Put Out x3 Fires" quest
                 Debug.Log("Trees earned from first quest: " + treesFromQuests);
                 // Update UI  
@@ -254,6 +256,7 @@ public class DailyQuests : MonoBehaviour
             }
         }
     }
+
 /*
     public void ActivateTapFastQuest()
     {
@@ -261,6 +264,8 @@ public class DailyQuests : MonoBehaviour
     }
 
 */
+
+
     public void OnBucketUpgraded() // Quest 4: Unlock/Upgrade your bucket to the next level.
     {
         Quest questToCheck = activeQuests.Find(quest => quest.Description == "Unlock/Upgrade your bucket to the next level");
